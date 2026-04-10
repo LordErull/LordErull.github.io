@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ✨</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  color:white;
+  text-align:center;
+  background:#0b1c3d;
+}
+
+.wrapper {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.hidden { display:none; }
+
+.box {
+  width:85%;
+  max-width:320px;
+}
+
+input {
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+
+button {
+  margin-top:10px;
+  padding:10px;
+  width:100%;
+  border:none;
+  border-radius:10px;
+  background:#00f7ff;
+  color:black;
+  font-size:16px;
+}
+
+.profile {
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  margin:auto;
+  background:url('https://i.ibb.co/2kRZ9qM/panda.png') center/cover;
+  box-shadow:0 0 20px #00f7ff;
+}
+
+.chatbox {
+  background:rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:15px;
+  margin-top:10px;
+}
+
+#text {
+  font-size:20px;
+}
+
+.pilihan button {
+  width:auto;
+  padding:10px 20px;
+  margin:10px;
+}
+
+.tidak {
+  position:relative;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper" id="start">
+  <div class="box">
+    <h2>Masukkan Namamu</h2>
+    <input id="nama"><br>
+    <button onclick="mulai()">Mulai</button>
+  </div>
+</div>
+
+<div class="wrapper hidden" id="main">
+  <div class="box">
+    <div class="profile"></div>
+    <h3 id="namaTampil"></h3>
+
+    <div class="chatbox">
+      <p id="text"></p>
+      <div id="btnArea"></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper hidden" id="tanya">
+  <div class="box">
+    <h2>Kamu seneng ga hari ini? 😏</h2>
+
+    <div class="pilihan">
+      <button onclick="jawabYa()">Ya 😊</button>
+      <button class="tidak" onclick="hindar(this)">Tidak 😈</button>
+    </div>
+
+    <p id="jahil"></p>
+  </div>
+</div>
+
+<div class="wrapper hidden" id="akhir">
+  <div class="box">
+    <h2>Tulis Pesan 🎁</h2>
+    <input id="pesan">
+    <button onclick="kirimWA()">Kirim</button>
+  </div>
+</div>
+
+<script>
+let step=0;
+
+let texts=[
+  "Aku ada sesuatu nih 😏",
+  "Serius ini penting...",
+  "Siap ya...",
+  "Selamat ulang tahun 🎉"
+];
+
+let texts2=[
+  "Semoga panjang umur",
+  "Semoga bahagia selalu",
+  "Semoga semua tercapai"
+];
+
+function mulai(){
+  let nama=document.getElementById("nama").value;
+  if(!nama) return alert("Isi nama dulu");
+
+  start.classList.add("hidden");
+  main.classList.remove("hidden");
+
+  namaTampil.innerHTML=nama;
+
+  ketik();
+}
+
+function ketik(){
+  let t=texts[step];
+  let i=0;
+  text.innerHTML="";
+
+  let int=setInterval(()=>{
+    text.innerHTML+=t[i];
+    i++;
+    if(i>=t.length){
+      clearInterval(int);
+      if(step<texts.length-1){
+        setTimeout(()=>{step++;ketik();},1000);
+      }else showBtn();
+    }
+  },40);
+}
+
+function showBtn(){
+  btnArea.innerHTML="";
+  let b=document.createElement("button");
+  b.innerText="Lanjut ➜";
+  b.onclick=()=>{main.classList.add("hidden");tanya.classList.remove("hidden");};
+  btnArea.appendChild(b);
+}
+
+function hindar(btn){
+  btn.style.left=Math.random()*100+"px";
+  btn.style.top=Math.random()*50+"px";
+  jahil.innerHTML="Eits ga bisa 😝";
+}
+
+function jawabYa(){
+  tanya.classList.add("hidden");
+  main.classList.remove("hidden");
+  step=0;
+  lanjut2();
+}
+
+function lanjut2(){
+  let t=texts2[step];
+  let i=0;
+  text.innerHTML="";
+
+  let int=setInterval(()=>{
+    text.innerHTML+=t[i];
+    i++;
+    if(i>=t.length){
+      clearInterval(int);
+      if(step<texts2.length-1){
+        setTimeout(()=>{step++;lanjut2();},1000);
+      }else{
+        setTimeout(()=>{
+          main.classList.add("hidden");
+          akhir.classList.remove("hidden");
+        },1000);
+      }
+    }
+  },40);
+}
+
+function kirimWA(){
+  let p=pesan.value;
+  if(!p) return alert("Isi pesan dulu");
+
+  window.open("https://wa.me/6281234567890?text="+encodeURIComponent(p));
+}
+</script>
+
+</body>
+</html>
