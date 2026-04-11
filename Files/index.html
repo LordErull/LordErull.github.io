@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ✨</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  color:white;
+  text-align:center;
+  overflow:hidden;
+  background: url('https://i.ibb.co/your-image.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+body::before {
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.5);
+}
+
+/* WRAPPER */
+.wrapper {
+  position:fixed;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+
+  opacity:0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.show {
+  opacity:1;
+  transform: translateY(0);
+}
+
+.hidden {
+  display:none;
+}
+
+.box {
+  width:85%;
+  max-width:300px;
+}
+
+/* BOX */
+.inputBox, .chatbox {
+  position:relative;
+  background:rgba(0,0,0,0.4);
+  padding:15px;
+  border-radius:15px;
+  z-index:1;
+}
+
+/* 🔥 OUTLINE FLOATING */
+.inputBox::before,
+.chatbox::before {
+  content:"";
+  position:absolute;
+  top:-12px;
+  left:-12px;
+  right:-12px;
+  bottom:-12px;
+  border:1.5px solid rgba(255,255,255,0.7);
+  border-radius:22px;
+  filter: blur(3px);
+  z-index:-1;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { opacity:0.5; }
+  to { opacity:1; }
+}
+
+/* INPUT & BUTTON (SAMA PERSIS) */
+input, button {
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+input {
+  margin-bottom:10px;
+}
+
+button {
+  background:#00f7ff;
+  color:black;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* PROFILE */
+.profile {
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  margin:auto;
+  background:url('https://i.ibb.co/2kRZ9qM/panda.png') center/cover;
+  box-shadow:0 0 20px #00f7ff;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  50% { transform: translateY(-8px); }
+}
+
+/* TEXT */
+#text {
+  font-size:20px;
+}
+
+.pilihan button {
+  width:auto;
+  padding:10px 20px;
+  margin:10px;
+}
+
+.tidak {
+  position:relative;
+}
+</style>
+</head>
+
+<body>
+
+<!-- START -->
+<div class="wrapper show" id="start">
+  <div class="box inputBox">
+    <input id="nama" placeholder="Masukkan nama">
+    <button onclick="mulai()">Oke</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="wrapper hidden" id="main">
+  <div class="box">
+    <div class="profile"></div>
+    <h3 id="namaTampil"></h3>
+
+    <div class="chatbox">
+      <p id="text"></p>
+      <div id="btnArea"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TANYA -->
+<div class="wrapper hidden" id="tanya">
+  <div class="box">
+    <h2>Kamu seneng ga hari ini? 😏</h2>
+
+    <div class="pilihan">
+      <button onclick="jawabYa()">Ya 😊</button>
+      <button class="tidak" onclick="hindar(this)">Tidak 😈</button>
+    </div>
+
+    <p id="jahil"></p>
+  </div>
+</div>
+
+<!-- AKHIR -->
+<div class="wrapper hidden" id="akhir">
+  <div class="box inputBox">
+    <input id="pesan" placeholder="Tulis pesan...">
+    <button onclick="kirimWA()">Kirim</button>
+  </div>
+</div>
+
+<script>
+let step=0;
+
+let texts=[
+  "Aku ada sesuatu nih 😏",
+  "Serius ini penting...",
+  "Siap ya...",
+  "Selamat ulang tahun 🎉"
+];
+
+let texts2=[
+  "Semoga panjang umur",
+  "Semoga bahagia selalu",
+  "Semoga semua tercapai"
+];
+
+let namaUser="";
+
+/* TRANSISI */
+function pindah(dari, ke){
+  dari.classList.remove("show");
+  setTimeout(()=>{
+    dari.classList.add("hidden");
+    ke.classList.remove("hidden");
+    setTimeout(()=> ke.classList.add("show"),50);
+  },400);
+}
+
+function mulai(){
+  let n=document.getElementById("nama").value;
+  if(!n) return alert("Isi nama dulu");
+
+  namaUser=n;
+  namaTampil.innerHTML="Hai, "+namaUser+" ✨";
+
+  pindah(start, main);
+  setTimeout(ketik,600);
+}
+
+function ketik(){
+  let t=texts[step];
+  let i=0;
+  text.innerHTML="";
+  btnArea.innerHTML="";
+
+  let int=setInterval(()=>{
+    text.innerHTML+=t[i];
+    i++;
+    if(i>=t.length){
+      clearInterval(int);
+      if(step<texts.length-1){
+        setTimeout(()=>{step++;ketik();},1000);
+      }else showBtn();
+    }
+  },40);
+}
+
+function showBtn(){
+  let b=document.createElement("button");
+  b.innerText="Klik untuk lanjut ➜";
+  b.onclick=()=> pindah(main, tanya);
+  btnArea.appendChild(b);
+}
+
+function hindar(btn){
+  btn.style.left=Math.random()*100+"px";
+  btn.style.top=Math.random()*50+"px";
+  jahil.innerHTML="Eits ga bisa 😝";
+}
+
+function jawabYa(){
+  step=0;
+  pindah(tanya, main);
+  setTimeout(lanjut2,600);
+}
+
+function lanjut2(){
+  let t=texts2[step];
+  let i=0;
+  text.innerHTML="";
+  btnArea.innerHTML="";
+
+  let int=setInterval(()=>{
+    text.innerHTML+=t[i];
+    i++;
+    if(i>=t.length){
+      clearInterval(int);
+      if(step<texts2.length-1){
+        setTimeout(()=>{step++;lanjut2();},1000);
+      }else{
+        setTimeout(()=> pindah(main, akhir),800);
+      }
+    }
+  },40);
+}
+
+function kirimWA(){
+  let p=pesan.value;
+  if(!p) return alert("Isi pesan dulu");
+
+  window.open("https://wa.me/6281234567890?text="+encodeURIComponent(p));
+}
+</script>
+
+</body>
+</html>
