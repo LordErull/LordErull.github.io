@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tantangan Anam</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+* {box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  overflow:hidden;
+}
+
+/* BACKGROUND */
+.bg{
+  position:fixed;
+  width:100%;height:100%;
+  background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover;
+  filter:blur(8px);
+  transform:scale(1.1);
+  z-index:-2;
+  transition:1s;
+}
+.overlay{
+  position:fixed;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.5);
+  z-index:-1;
+}
+
+/* CONTAINER */
+.wrap{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+.card{
+  width:100%;
+  max-width:360px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  padding:20px;
+  color:white;
+  text-align:center;
+  animation:fade .5s;
+}
+
+/* TEXT BOX */
+.box{
+  margin-top:15px;
+  padding:15px;
+  border-radius:15px;
+  background:rgba(255,255,255,0.15);
+  text-align:left;
+  min-height:60px;
+}
+
+/* INPUT */
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-top:10px;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  margin-top:12px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+button:hover{transform:scale(1.05);}
+
+.green{background:#00c853;color:white;}
+.red{background:#ff1744;color:white;}
+
+/* PROFILE */
+.profile{
+  width:70px;height:70px;
+  border-radius:50%;
+  background:#29b6f6;
+  margin:auto;
+}
+
+/* TYPE ANIMATION */
+.typing{
+  overflow:hidden;
+  white-space:nowrap;
+  border-right:2px solid white;
+  animation:typing 3s steps(30,end), blink .7s infinite;
+}
+@keyframes typing{from{width:0}to{width:100%}}
+@keyframes blink{50%{border-color:transparent}}
+
+@keyframes fade{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:translateY(0)}
+}
+</style>
+</head>
+
+<body>
+<div class="bg" id="bg"></div>
+<div class="overlay"></div>
+
+<div class="wrap">
+<div class="card" id="app"></div>
+</div>
+
+<script>
+let nama="";
+let hold=false;
+let nomor="6281234567890"; // GANTI
+
+function set(html){
+  document.getElementById("app").innerHTML=html;
+}
+
+/* OP1 */
+function OP1(){
+set(`
+<h2>Dokumen</h2>
+<div class="box">Sangat Rahasia</div>
+<button class="green" onclick="OP2()">Klik Disini</button>
+`);
+}
+
+/* OP2 */
+function OP2(){
+set(`
+<h3>Masukkan Nama</h3>
+<input id="nama">
+<button class="green" onclick="goHA1()">Konfirmasi</button>
+`);
+}
+
+function goHA1(){
+nama=document.getElementById("nama").value;
+if(!nama)return alert("Isi dulu!");
+HA1();
+}
+
+/* HA1 */
+function HA1(){
+set(`
+<div class="profile"></div>
+<p>Hai, ${nama} ✨</p>
+<p>Ada pesan nih dari Anam</p>
+
+<div class="box typing">Ini pesan rahasia untuk kamu...</div>
+
+<button class="green" onclick="HA2()">Ya</button>
+<button class="red" onclick="HB1()">Tidak</button>
+`);
+}
+
+/* HA2 (2x) */
+function HA2(){
+set(`
+<div class="box typing">Kamu berani ya... lanjut!</div>
+<button class="green" onclick="HA2_2()">Lanjut</button>
+`);
+}
+
+function HA2_2(){
+set(`
+<div class="box typing">Masih lanjut... siap ke tahap berikutnya?</div>
+<button class="green" onclick="HA3()">Lanjut</button>
+`);
+}
+
+/* HA3 */
+function HA3(){
+set(`
+<div class="profile"></div>
+<p>Hai lagi, ${nama}</p>
+<p>Masih ada pesan dari Anam</p>
+
+<div class="box typing">Ini tantangan terakhir...</div>
+
+<button class="green" onclick="THANKS()">Ya</button>
+<button class="red" onclick="HB1()">Tidak</button>
+`);
+}
+
+/* THANK YOU */
+function THANKS(){
+set(`
+<h2>Terima kasih 🎉</h2>
+<button class="green" onclick="OP1()">Back To Home</button>
+`);
+}
+
+/* HB1 */
+function HB1(){
+document.getElementById("bg").style.background="url('https://images.unsplash.com/photo-1495567720989-cebdbdd97913') center/cover";
+
+set(`
+<div class="box">Ketik alasan kamu</div>
+<input id="alasan" placeholder="ketik jawaban...">
+<button class="green" onclick="kirimTidak()">Konfirmasi</button>
+`);
+}
+
+function kirimTidak(){
+let alasan=document.getElementById("alasan").value;
+let pesan="jawaban : Tidak. Alasan : "+alasan;
+window.open("https://wa.me/"+nomor+"?text="+encodeURIComponent(pesan));
+HB2();
+}
+
+/* HB2 */
+function HB2(){
+let text="Terima kasih sudah jujur... pesan ini akan hilang dalam 10 detik...";
+set(`
+<div class="box" id="teks"></div>
+<small>klik dan tahan untuk membaca</small>
+`);
+
+let i=0;
+let el=document.getElementById("teks");
+
+function jalan(){
+ if(!hold && i<text.length){
+   el.innerHTML+=text[i];
+   i++;
+   setTimeout(jalan,50);
+ }
+}
+jalan();
+
+/* HOLD */
+document.body.onmousedown=()=>hold=true;
+document.body.onmouseup=()=>hold=false;
+
+/* pindah 10 detik */
+setTimeout(()=>{
+ set(`
+ <h2>Selesai</h2>
+ <button class="green" onclick="OP1()">Back To Home</button>
+ `);
+},10000);
+}
+
+/* START */
+OP1();
+</script>
+
+</body>
+</html>
