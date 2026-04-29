@@ -1,0 +1,443 @@
+<!DOCTYPE html>      
+<html lang="en">      
+<head>      
+<meta charset="UTF-8">      
+<meta name="viewport" content="width=device-width, initial-scale=1.0">      
+<title>Futuristic System</title>      
+      
+<style>      
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}      
+      
+body{      
+background:radial-gradient(circle,#0a0f2c,#050816);      
+color:white;      
+overflow:hidden;      
+display:flex;      
+justify-content:center;      
+align-items:center;      
+height:100vh;      
+}      
+      
+.page{      
+position:absolute;      
+width:100%;      
+height:100%;      
+display:flex;      
+justify-content:center;      
+align-items:center;      
+flex-direction:column;      
+opacity:0;      
+transform:scale(.9);      
+transition:.5s;      
+pointer-events:none;      
+}      
+.page.active{      
+opacity:1;      
+transform:scale(1);      
+pointer-events:all;      
+}      
+      
+.card{      
+background:rgba(0,0,30,.7);      
+padding:30px;      
+border-radius:15px;      
+width:320px;      
+text-align:center;      
+animation:enter 0.8s ease, glowFlow 6s linear infinite;      
+}      
+      
+@keyframes enter{      
+0%{opacity:0;transform:translateY(40px) scale(0.9);}      
+100%{opacity:1;transform:translateY(0) scale(1);}      
+}      
+      
+@keyframes glowFlow{      
+0%{box-shadow:0 0 15px #00ccff;}      
+50%{box-shadow:0 0 25px #0066ff;}      
+100%{box-shadow:0 0 15px #00ccff;}      
+}      
+      
+input, textarea{      
+width:100%;      
+padding:10px;      
+margin:10px 0;      
+background:transparent;      
+border:1px solid #00ccff;      
+border-radius:8px;      
+color:white;      
+outline:none;      
+}      
+      
+/* TAMBAHAN: TEXT WRAP AGAR TEKS PANJANG MUAT */
+.label-text{
+white-space:normal;
+line-height:1.4;
+margin-bottom:5px;
+}
+      
+/* TAMBAHAN: INPUT PASSWORD + ICON */
+.pass-wrap{
+position:relative;
+}
+.eye-btn{
+position:absolute;
+right:10px;
+top:50%;
+transform:translateY(-50%);
+width:22px;
+height:22px;
+cursor:pointer;
+opacity:.7;
+transition:.3s;
+}
+.eye-btn:hover{
+opacity:1;
+filter:drop-shadow(0 0 5px #00ccff);
+}
+      
+input:focus, textarea:focus{box-shadow:0 0 10px #00ccff;}      
+.error{box-shadow:0 0 10px red;}      
+.success{box-shadow:0 0 10px #00ffcc;}      
+      
+button{      
+width:100%;      
+padding:10px;      
+margin-top:10px;      
+border:none;      
+border-radius:8px;      
+background:linear-gradient(45deg,#00ccff,#0066ff);      
+color:white;      
+cursor:pointer;      
+transition:.2s;      
+}      
+button:hover{      
+box-shadow:0 0 15px #00ccff;      
+transform:scale(1.05);      
+}      
+button:active{      
+transform:scale(0.95);      
+box-shadow:0 0 25px #00ccff inset;      
+}      
+      
+.loader{      
+border:3px solid rgba(255,255,255,.2);      
+border-top:3px solid #00ccff;      
+border-radius:50%;      
+width:18px;height:18px;      
+animation:spin 1s linear infinite;      
+margin:auto;      
+}      
+@keyframes spin{100%{transform:rotate(360deg);}}      
+      
+#status{margin-top:10px;min-height:20px;}      
+.status-error{color:red;text-shadow:0 0 8px red;}      
+.status-success{color:#00ffcc;text-shadow:0 0 8px #00ffcc;}      
+      
+.typing{      
+border-right:2px solid #00ccff;      
+white-space:nowrap;      
+overflow:hidden;      
+margin-bottom:10px;      
+}      
+      
+.textbox{      
+border:1px solid #00ccff;      
+padding:15px;      
+border-radius:10px;      
+display:flex;      
+align-items:center;      
+justify-content:flex-start;      
+text-align:left;      
+min-height:100px;      
+white-space:pre-wrap;      
+}      
+      
+.profile{      
+width:80px;height:80px;      
+border-radius:50%;      
+background:#00ccff;      
+margin:auto;      
+overflow:hidden;      
+cursor:pointer;      
+}      
+.profile img{width:100%;height:100%;object-fit:cover;}      
+      
+.viewer{      
+position:fixed;      
+top:0;left:0;      
+width:100%;height:100%;      
+background:black;      
+display:none;      
+justify-content:center;      
+align-items:center;      
+flex-direction:column;      
+z-index:999;      
+}      
+.viewer img{max-width:90%;max-height:90%;}      
+      
+.back{      
+position:absolute;      
+top:50%;      
+left:15px;      
+transform:translateY(-50%);      
+width:40px;      
+height:40px;      
+border-radius:50%;      
+font-size:20px;      
+display:flex;      
+justify-content:center;      
+align-items:center;      
+background:rgba(0,0,0,0.6);      
+border:1px solid #00ccff;      
+color:#00ccff;      
+cursor:pointer;      
+transition:0.3s;      
+opacity:0;      
+}      
+.back:hover{      
+box-shadow:0 0 10px #00ccff;      
+transform:translateY(-50%) scale(1.1);      
+}      
+      
+#infoText{      
+position:absolute;      
+bottom:30px;      
+color:white;      
+text-align:center;      
+font-size:14px;      
+opacity:0.8;      
+max-width:80%;      
+padding:10px 15px;      
+background:rgba(0,0,0,0.5);      
+border:1px solid #00ccff;      
+border-radius:10px;      
+backdrop-filter:blur(5px);      
+box-shadow:0 0 10px rgba(0,204,255,0.5);      
+transition:opacity 1s;      
+}      
+</style>      
+</head>      
+      
+<body>      
+      
+<!-- LOGIN -->      
+<div class="page active" id="loginPage">      
+<div class="card">      
+<h2>Login</h2>      
+<input id="user" placeholder="Username">      
+
+<div class="pass-wrap">
+<input id="pass" type="password" placeholder="Password">
+<svg class="eye-btn" onclick="togglePass()" viewBox="0 0 24 24" fill="none" stroke="#00ccff" stroke-width="2">
+<path d="M1 12s4-6 11-6 11 6 11 6-4 6-11 6S1 12 1 12z"/>
+<circle cx="12" cy="12" r="3"/>
+</svg>
+</div>
+
+<button onclick="login()" id="btnLogin">Continue</button>      
+<div id="status"></div>      
+</div>      
+</div>      
+      
+<!-- PAGE 1 -->      
+<div class="page" id="page1">      
+<div class="card">      
+<div class="profile" onclick="changePhoto()">      
+<img id="profileImg">      
+</div>      
+<div class="typing" id="typing1"></div>      
+<div class="textbox" id="box1"></div>      
+<button onclick="next1()" id="btn1">Konfirmasi</button>      
+</div>      
+</div>      
+      
+<!-- PAGE 2 -->      
+<div class="page" id="page2">      
+<div class="card">      
+<div class="typing" id="typing2"></div>      
+<div class="textbox" id="box2"></div>      
+<button onclick="showImage()">Lihat LKHC T1</button>      
+</div>      
+</div>      
+      
+<!-- VIEWER -->      
+<div class="viewer" id="viewer">      
+<button class="back" id="btnClose" onclick="closeViewer()">X</button>      
+<img src="HPretesCT1.png">      
+<div id="infoText">      
+Lihat, baca atau pahami dulu sebelum keluar        
+<br>[Keluar klik tombol X]      
+</div>      
+</div>      
+      
+<!-- PAGE INPUT BARU -->      
+<div class="page" id="pageInput">      
+<div class="card">      
+<div class="label-text">
+Silahkan masukan pendapat mu mengenai poin yang kamu dapat
+</div>
+<input id="jawaban" placeholder="Tulis disini...">
+<button onclick="toPage3()">Next</button>      
+</div>      
+</div>      
+      
+<!-- PAGE 3 -->      
+<div class="page" id="page3">      
+<div class="card">      
+<div class="typing" id="typing3"></div>      
+<div class="textbox" id="box3"></div>      
+<button onclick="finish()" id="btnFinish">Lanjut</button>      
+</div>      
+</div>      
+      
+<script>      
+let savedJawaban="";      
+
+function togglePass(){
+let p=document.getElementById("pass");
+p.type = p.type==="password" ? "text" : "password";
+}
+      
+function typeText(el, text, speed=45){      
+el.innerHTML="";      
+let i=0;      
+function t(){      
+if(i<text.length){      
+el.innerHTML+=text[i++];      
+setTimeout(t,speed);      
+}}      
+t();      
+}      
+      
+function login(){      
+let user=document.getElementById("user");      
+let pass=document.getElementById("pass");      
+let status=document.getElementById("status");      
+let btn=document.getElementById("btnLogin");      
+      
+const u="admin";      
+const p="12345";      
+      
+status.innerHTML="";      
+status.className="";      
+user.classList.remove("error","success");      
+pass.classList.remove("error","success");      
+      
+btn.innerHTML='<div class="loader"></div>';      
+btn.disabled=true;      
+      
+setTimeout(()=>{      
+if(user.value==="" || pass.value===""){      
+status.innerHTML="Fields cannot be empty";      
+status.classList.add("status-error");      
+user.classList.add("error");      
+pass.classList.add("error");      
+}      
+else if(user.value===u && pass.value===p){      
+status.innerHTML="Access Granted";      
+status.classList.add("status-success");      
+user.classList.add("success");      
+pass.classList.add("success");      
+      
+showPage("page1");      
+typeText(document.getElementById("typing1"),"Hai, Danish✨");      
+typeText(document.getElementById("box1"),"Hari/Tanggal : Rabu - 29 - April - 2026\nNama : Muhammad Danish A.\nKelas/No : IX - D [26]\nNIS : -");      
+}      
+else{      
+status.innerHTML="Invalid username or password";      
+status.classList.add("status-error");      
+user.classList.add("error");      
+pass.classList.add("error");      
+}      
+      
+btn.innerHTML="Continue";      
+btn.disabled=false;      
+},1000);      
+}      
+      
+function next1(){      
+let btn=document.getElementById("btn1");      
+btn.innerHTML='<div class="loader"></div>';      
+      
+setTimeout(()=>{      
+showPage("page2");      
+typeText(document.getElementById("typing2"),"Welcome to Pretes Tantangan T1");      
+typeText(document.getElementById("box2"),"Ini adalah hasil Pretes atau uji coba Tantangan yang di buat oleh sistem .Silahkan lihat LKHC T1.");      
+btn.innerHTML="Konfirmasi";      
+},1000);      
+}      
+      
+function showImage(){      
+let viewer=document.getElementById("viewer");      
+let btn=document.getElementById("btnClose");      
+let text=document.getElementById("infoText");      
+      
+viewer.style.display="flex";      
+btn.style.opacity="0";      
+text.style.opacity="1";      
+      
+setTimeout(()=>{btn.style.opacity="1";},15000);      
+setTimeout(()=>{text.style.opacity="0";},4000);      
+}      
+      
+function closeViewer(){      
+document.getElementById("viewer").style.display="none";      
+showPage("pageInput");      
+}      
+      
+function toPage3(){      
+let input=document.getElementById("jawaban");
+
+input.classList.remove("error","success");
+
+if(input.value.trim()===""){
+input.classList.add("error");
+input.placeholder="Wajib diisi dulu...";
+return;
+}
+
+input.classList.add("success");
+
+savedJawaban=input.value;      
+showPage("page3");      
+typeText(document.getElementById("typing3"),"Final Stage...");      
+typeText(document.getElementById("box3"),"Ini halaman terakhir.");      
+}
+      
+function finish(){      
+let btn=document.getElementById("btnFinish");
+
+/* 1. tombol langsung jadi spinner */
+btn.innerHTML='<div class="loader"></div>';
+btn.disabled=true;
+
+/* 2. kasih jeda biar keliatan loading */
+setTimeout(()=>{
+
+alert("Tantangan Berlanjut");
+
+/* 3. setelah klik OK → lanjut ke WA (spinner tetap) */
+setTimeout(()=>{
+
+let text="Jawaban : "+savedJawaban+", tantangan real dimulai";      
+let url="https://wa.me/,625786143603?text="+encodeURIComponent(text);      
+window.location.href=url;      
+
+},500);
+
+},1200);
+}
+      
+function showPage(id){      
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));      
+document.getElementById(id).classList.add("active");      
+}      
+      
+function changePhoto(){      
+let url=prompt("ProfileFD.jpg");      
+if(url) document.getElementById("profileImg").src=url;      
+}      
+</script>      
+      
+</body>      
+</html>
