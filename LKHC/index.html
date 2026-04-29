@@ -243,7 +243,7 @@ transition:opacity 1s;
 <div class="page" id="page1">      
 <div class="card">      
 <div class="profile" onclick="changePhoto()">      
-<img id="profileImg">      
+<img id="profileImg" src="HProfileFD.jpg">      
 </div>      
 <div class="typing" id="typing1"></div>      
 <div class="textbox" id="box1"></div>      
@@ -401,7 +401,7 @@ input.classList.add("success");
 savedJawaban=input.value;      
 showPage("page3");      
 typeText(document.getElementById("typing3"),"Final Stage...");      
-typeText(document.getElementById("box3"),"Ini halaman terakhir.");      
+typeText(document.getElementById("box3"),"Ini halaman terakhir, Silahkan klik tombol dibawah ini.");      
 }
       
 function finish(){      
@@ -420,7 +420,7 @@ alert("Tantangan Berlanjut");
 setTimeout(()=>{
 
 let text="Jawaban : "+savedJawaban+", tantangan real dimulai";      
-let url="https://wa.me/,625786143603?text="+encodeURIComponent(text);      
+let url="https://wa.me/,6285786143603?text="+encodeURIComponent(text);      
 window.location.href=url;      
 
 },500);
