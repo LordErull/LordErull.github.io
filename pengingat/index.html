@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aesthetic UI Final</title>
+
+<style>
+:root{
+  --bg:url('Background_Blue.png');
+  --profile:url('https://i.pravatar.cc/150');
+  --blue:0,191,255;
+}
+
+/* PROFIL BERBEDA */
+#h4{
+  --profile:url('ProfileB.jpg');
+}
+
+#h5{
+  --profile:url('ProfilA.jpg');
+}
+
+/* BASE */
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:var(--bg) center/cover no-repeat;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+}
+
+.container{
+  width:90%;
+  max-width:340px;
+  position:relative;
+}
+
+.page{
+  position:absolute;
+  width:100%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(.96);
+  opacity:0;
+  transition:.4s ease;
+  pointer-events:none;
+}
+
+.page.active{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:auto;
+}
+
+.header{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.profile{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  margin:12px 0;
+  background:var(--profile) center/cover;
+  border:2px solid rgba(255,255,255,0.25);
+
+  animation:
+    floatProfile 4s ease-in-out infinite,
+    glowProfile 3s ease-in-out infinite;
+}
+
+.card{
+  background:rgba(255,255,255,0.05);
+  padding:18px;
+  border-radius:18px;
+  margin-top:10px;
+  border:1px solid rgba(var(--blue),0.25);
+
+  animation:
+    floatBox 4s ease-in-out infinite,
+    glowBlue 3s ease-in-out infinite;
+}
+
+@keyframes floatBox{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-6px); }
+}
+
+@keyframes floatProfile{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-10px); }
+}
+
+@keyframes glowBlue{
+  0%{ box-shadow:0 8px 20px rgba(0,0,0,0.35),0 0 6px rgba(var(--blue),0.15); }
+  50%{ box-shadow:0 12px 28px rgba(0,0,0,0.4),0 0 18px rgba(var(--blue),0.35); }
+  100%{ box-shadow:0 8px 20px rgba(0,0,0,0.35),0 0 6px rgba(var(--blue),0.15); }
+}
+
+@keyframes glowProfile{
+  0%{ box-shadow:0 6px 15px rgba(0,0,0,0.4),0 0 6px rgba(var(--blue),0.15); }
+  50%{ box-shadow:0 10px 25px rgba(0,0,0,0.45),0 0 20px rgba(var(--blue),0.4); }
+  100%{ box-shadow:0 6px 15px rgba(0,0,0,0.4),0 0 6px rgba(var(--blue),0.15); }
+}
+
+.typing{
+  border-right:2px solid white;
+  padding-right:4px;
+  animation:blink .7s infinite;
+}
+@keyframes blink{50%{border-color:transparent;}}
+
+input{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  margin-top:10px;
+  text-align:center;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border:none;
+  border-radius:14px;
+  background:#00c853;
+  color:white;
+  font-size:15px;
+}
+
+ul{
+  list-style:none;
+  padding:0;
+  text-align:left;
+}
+li{ margin:6px 0; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- H1 -->
+<div class="page active" id="h1">
+  <div class="card" style="text-align:center;">
+    <h2>Selamat Datang</h2>
+    <button onclick="go('h2')">Mulai</button>
+  </div>
+</div>
+
+<!-- H2 -->
+<div class="page" id="h2">
+  <div class="card">
+    <h2 style="text-align:center;">Masukan Nama</h2>
+    <input id="namaInput" placeholder="Nama">
+    <button onclick="save()">Verifikasi</button>
+  </div>
+</div>
+
+<!-- H4 -->
+<div class="page" id="h4">
+  <div class="header">
+    <div class="profile"></div>
+    <h2 id="halo" class="typing"></h2>
+  </div>
+
+  <div class="card">
+    <ul id="listData"></ul>
+  </div>
+
+  <button onclick="goH5()">Verifikasi</button>
+</div>
+
+<!-- H5 -->
+<div class="page" id="h5">
+  <div class="header">
+    <div class="profile"></div>
+    <h2 id="halo2" class="typing"></h2>
+  </div>
+
+  <div class="card">
+    <p id="pesan" class="typing"></p>
+  </div>
+
+  <button onclick="startChallenge()">Mulai</button>
+</div>
+
+<!-- H6 -->
+<div class="page" id="h6">
+  <div class="card" style="text-align:center;">
+    <h2 id="finalText" class="typing"></h2>
+  </div>
+</div>
+
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function save(){
+  let nama=document.getElementById("namaInput").value;
+
+  if(nama.trim()===""){
+    alert("Isi nama dulu!");
+    return;
+  }
+
+  window.namaUser=nama;
+  go("h4");
+
+  setTimeout(()=>{
+    typeLetter("halo","Hai, "+nama+" ✨");
+    typeList();
+  },400);
+}
+
+function typeList(){
+  const data=["Nama : Muhammad Danish A","Kelas : IX - D","No : 26","NIS : -"];
+  const ul=document.getElementById("listData");
+  ul.innerHTML="";
+  let i=0;
+
+  function next(){
+    if(i<data.length){
+      let li=document.createElement("li");
+      ul.appendChild(li);
+      typeLine(li,data[i],next);
+      i++;
+    }
+  }
+  next();
+}
+
+function typeLine(el,text,cb){
+  let i=0;
+  function t(){
+    if(i<text.length){
+      el.innerHTML+=text[i];
+      i++;
+      setTimeout(t,30);
+    } else setTimeout(cb,150);
+  }
+  t();
+}
+
+function goH5(){
+  go("h5");
+  setTimeout(()=>{
+    typeLetter("halo2","Hai, "+window.namaUser+" ✨");
+    typeLetter("pesan","Hari ini akan dimulai Tantangan Penilaian sikap. jika lupa apa saja yang akan di nilai tanya ke whatsapp sistem (Anm). klik Mulai untuk memulai tantangan");
+  },400);
+}
+
+/* UPDATED */
+function startChallenge(){
+  go("h6");
+
+  setTimeout(()=>{
+    typeLetter("finalText","Tantangan Dimulai", function(){
+      
+      window.location.href =
+        "https://wa.me/6281234567890?text=Tantangan%20Dimulai";
+
+    });
+  },400);
+}
+
+function typeLetter(id,text,callback){
+  let el=document.getElementById(id);
+  el.innerHTML="";
+  let i=0;
+
+  function t(){
+    if(i<text.length){
+      el.innerHTML+=text[i];
+      i++;
+      setTimeout(t,35);
+    } else {
+      if(callback) callback();
+    }
+  }
+  t();
+}
+</script>
+
+</body>
+</html>
